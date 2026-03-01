@@ -1,36 +1,182 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🚀 The X-Ray Candidate Portal: Humanizing the Recruitment Journey
+
+| Link | URL |
+|------|-----|
+| **Live Deployment** | [https://xobin-candidate-portal-pilot.vercel.app](https://xobin-candidate-portal-pilot.vercel.app) |
+| **Assessment Demo** | [https://xobin-candidate-portal-pilot.vercel.app/assessment](https://xobin-candidate-portal-pilot.vercel.app/assessment) |
+
+---
+
+> **ATS systems are built for recruiters; X-Ray is built for candidates.**
+
+Most recruitment portals optimize for HR efficiency. Candidates submit resumes and disappear into a black hole—no feedback, no clarity, no path forward. The experience is transactional at best, demoralizing at worst.
+
+X-Ray replaces silence with **transparency** and **growth**. Every candidate leaves the process with something of value, not just a binary yes or no.
+
+---
+
+## The Humanity-First Strategy
+
+### Immediate ROI for Candidates
+
+**Every applicant receives a Personalized Skill Gap Analysis within 20 seconds.**
+
+No more waiting weeks for a generic rejection. The AI X-Ray analyzes the resume against the job description, surfaces alignment and gaps, and delivers actionable feedback—instantly.
+
+### "No" is Not "Not Yet"
+
+> **Candidates who don't match today aren't rejected; they're redirected.**
+
+Instead of a dead end, they receive:
+
+- **A Roadmap** — What to learn, in what order, to close the gap
+- **A Bridge Assessment** — Token-gated MCQs that prove competency or identify areas to strengthen
+- **A Growth Path** — Clear next steps so they can return stronger
+
+The goal: candidates walk away informed, empowered, and with a clear trajectory—whether they get the job or not.
+
+---
+
+## Architectural Flow
+
+```mermaid
+flowchart TB
+    subgraph Entry
+        A[Resume Submission] --> B[PDF Text Extraction]
+        B --> C[AI X-Ray Analysis]
+    end
+
+    subgraph Branching
+        C --> D{Adaptive Branching}
+        D -->|High Score| E[Elite Track]
+        D -->|Growth Needed| F[Bridge Track]
+    end
+
+    subgraph Assessments
+        E --> G[Token-Gated Leadership Simulation]
+        F --> H[Token-Gated Technical Bridge Quiz]
+    end
+
+    subgraph Feedback
+        G --> I[Automated Feedback Loop]
+        H --> I
+        I --> J[Personalized Gmail Report]
+    end
+
+    subgraph PostDeadline
+        J --> K[Relative Market Benchmarking]
+        K --> L[Market Standings Report]
+    end
+```
+
+---
+
+## Feature Deep-Dive
+
+### 1. Live System Log
+
+A real-time terminal-style UI showing the AI "handshake"—when the resume is received, when analysis begins, when feedback is dispatched. This reduces candidate anxiety by making the process **visible** instead of opaque.
+
+### 2. Adaptive MCQ Engine
+
+Token-gated `/assessment` routes serve the right experience:
+
+| Track | Route | Audience |
+|-------|-------|----------|
+| **Elite** | `/assessment?type=tech` or `?type=behavioral` | Senior candidates — Leadership & Pressure Simulation |
+| **Bridge** | `/assessment?type=gap` | Growth candidates — Technical Gap Mitigation Quiz |
+
+The system routes candidates based on AI X-Ray scores, ensuring everyone gets an assessment that matches their profile.
+
+### 3. Automated Feedback Loop
+
+Sophisticated HTML emails via n8n + Gmail deliver:
+
+- **Score breakdowns** — How they performed vs. the JD
+- **Percentile standings** — Where they rank in the applicant pool
+- **Personalized recommendations** — What to improve
+
+All within ~20 seconds of submission.
+
+### 4. Relative Market Benchmarking
+
+After the application deadline, candidates receive a **Market Standings** report—how they compared to the full cohort. This turns a competitive process into a learning opportunity.
+
+---
+
+## Technical Stack
+
+| Layer | Technology |
+|-------|------------|
+| **Frontend** | Next.js 14 (App Router), React 19, Tailwind CSS, Framer Motion |
+| **Orchestration** | n8n — Complex logic branching, webhooks, Gmail integration |
+| **Intelligence** | Gemini Flash — Vectorized resume-to-JD analysis |
+| **Deployment** | Vercel |
+
+---
+
+## Future Scope
+
+- **AI Voice Interviewing** — Conversational assessments with real-time sentiment and competency scoring
+- **Recruiter Heatmaps** — Visual dashboards showing candidate fit, pipeline health, and bottleneck analysis
+- **Direct Xobin Module Integration** — Native embedding into Xobin's assessment ecosystem
+
+---
+
+## Constraint Transparency
+
+This is a **High-Fidelity Prototype** running on **Free-Tier API Infrastructure**.
+
+- **Rate limits and quotas** apply to all external services
+- **Simulation Note** — During high-latency periods (e.g., AI processing), the n8n workflow may introduce intentional delays (~20 seconds). In production, this would be optimized with streaming, caching, or dedicated inference endpoints.
+
+---
 
 ## Getting Started
 
-First, run the development server:
-
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) to access the portal.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Environment Variables
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Variable | Description |
+|----------|-------------|
+| `NEXT_PUBLIC_N8N_WEBHOOK_URL` | n8n webhook URL for application submission (required for form → AI pipeline) |
 
-## Learn More
+Copy `.env.example` to `.env.local` and add your values.
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
 ## Deploy on Vercel
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1. Import the repo into [Vercel](https://vercel.com)
+2. Add `NEXT_PUBLIC_N8N_WEBHOOK_URL` in Project Settings → Environment Variables
+3. Deploy
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+## Project Structure
+
+```
+src/
+├── app/
+│   ├── page.tsx              # Home: Apply with AI X-Ray
+│   ├── assessment/
+│   │   └── page.tsx          # Adaptive MCQs (Gap / Tech)
+│   └── api/
+│       ├── parse/            # PDF text extraction
+│       └── parse-pdf/        # PDF text extraction (alias)
+├── components/
+│   ├── ApplicationEntry.tsx  # Main application form
+│   └── assessment/
+│       ├── SkillBridgeQuiz.tsx       # Bridge Track
+│       └── LeadershipPressureQuiz.tsx # Elite Track
+```
+
+---
+
+*Built for the Xobin Technical Exercise. Human-first recruitment, one candidate at a time.*
