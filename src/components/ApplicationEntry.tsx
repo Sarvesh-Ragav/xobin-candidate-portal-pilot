@@ -223,9 +223,8 @@ const ApplicationFormPanel = ({
         setResumeText(text);
         setFileName(file.name);
         setParseError(null);
-      } catch (err) {
-        const msg = err instanceof Error ? err.message : "Unknown error";
-        setParseError(msg);
+      } catch {
+        setParseError("Resource issue. Please try again later.");
         setResumeText("");
         setFileName(null);
       } finally {
@@ -252,7 +251,7 @@ const ApplicationFormPanel = ({
       setSubmitError(null);
 
       if (!WEBHOOK_URL) {
-        setSubmitError("Webhook URL is not configured. Please contact support.");
+        setSubmitError("Resource issue. Please try again later.");
         setIsSubmitting(false);
         return;
       }
@@ -274,34 +273,20 @@ const ApplicationFormPanel = ({
         const rawText = await response.text();
 
         if (!response.ok) {
-          let errMsg = `Request failed (${response.status})`;
-          try {
-            const errBody = rawText.trim() ? JSON.parse(rawText) : {};
-            const msg = errBody?.message ?? errBody?.error ?? errBody?.msg;
-            if (typeof msg === "string") errMsg = msg;
-          } catch {
-            if (rawText) errMsg = rawText.slice(0, 200);
-          }
-          if (errMsg.toLowerCase().includes("webhook") && errMsg.toLowerCase().includes("trigger")) {
-            errMsg =
-              "Webhook trigger is not configured. In n8n: add a Webhook trigger node, activate the workflow, and use the Production URL.";
-          }
-          throw new Error(errMsg);
+          throw new Error("RESOURCE_ISSUE");
         }
 
         let data: unknown;
         try {
           data = rawText.trim() ? JSON.parse(rawText) : {};
         } catch {
-          throw new Error("Invalid response from server. Please try again.");
+          throw new Error("RESOURCE_ISSUE");
         }
 
         console.log("[System] Application submitted successfully");
         onAnalysisComplete(data);
-      } catch (err) {
-        setSubmitError(
-          err instanceof Error ? err.message : "Something went wrong. Please try again."
-        );
+      } catch {
+        setSubmitError("Resource issue. Please try again later.");
         setIsSubmitting(false);
       }
     },
@@ -458,9 +443,8 @@ const ApplicationFormPanel = ({
                 <div className="mt-2 flex flex-col gap-1 rounded-lg border border-red-500/30 bg-red-500/10 px-3 py-2">
                   <p className="flex items-center gap-2 text-xs font-medium text-red-400">
                     <AlertTriangle className="h-3.5 w-3.5 flex-shrink-0" />
-                    Failed to parse PDF
+                    {parseError}
                   </p>
-                  <p className="text-xs text-zinc-500">{parseError}</p>
                   <button
                     type="button"
                     onClick={handleRemoveResume}
