@@ -82,7 +82,8 @@ The Adaptive Branching logic—Elite vs. Bridge track, AI X-Ray scoring, and fee
 <!-- ![n8n Workflow Canvas](docs/screenshots/n8n-workflow-canvas.png) -->
 
 ```
-📸 SCREENSHOT PLACEHOLDER: n8n Workflow Canvas
+<img width="2940" height="1912" alt="image" src="https://github.com/user-attachments/assets/cf5ef456-139a-484a-875d-a7508e88cae9" />
+
    Path: docs/screenshots/n8n-workflow-canvas.png
    Caption: The orchestration engine—logic branches, webhooks, and AI integration without frontend complexity.
 ```
@@ -113,9 +114,7 @@ The system routes candidates based on AI X-Ray scores, ensuring everyone gets an
 <!-- ![Token-Gated Assessment](docs/screenshots/token-gated-assessment.png) -->
 
 ```
-📸 SCREENSHOT PLACEHOLDER: Token-Gated Assessment UI
-   Path: docs/screenshots/token-gated-assessment.png
-   Caption: Candidates receive the right assessment for their track—Elite or Bridge—keeping them informed and in control.
+
 ```
 
 ### 3. Automated Feedback Loop
@@ -136,11 +135,9 @@ All within ~20 seconds of submission. These emails are human-centric touchpoints
 <!-- ![Growth Roadmap Email](docs/screenshots/growth-roadmap-email.png) -->
 
 ```
-📸 SCREENSHOT PLACEHOLDER: Elite Email (Leadership & Pressure feedback)
-   Path: docs/screenshots/elite-email.png
+<img width="2940" height="1912" alt="image" src="https://github.com/user-attachments/assets/d4b974ee-a5af-4761-8762-05d0dccdfd06" />
+<img width="2940" height="1912" alt="image" src="https://github.com/user-attachments/assets/885b6b25-a89b-4bc5-ac78-5bbc19217f74" />
 
-📸 SCREENSHOT PLACEHOLDER: Growth Roadmap Email (Technical Gap feedback)
-   Path: docs/screenshots/growth-roadmap-email.png
 
    Caption: Real-time career intelligence—instant value delivered to the candidate's inbox.
 ```
