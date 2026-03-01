@@ -271,11 +271,23 @@ const ApplicationFormPanel = ({
           }),
         });
 
-        if (!response.ok) {
-          throw new Error(`Request failed with status ${response.status}`);
-        }
-
         const rawText = await response.text();
+
+        if (!response.ok) {
+          let errMsg = `Request failed (${response.status})`;
+          try {
+            const errBody = rawText.trim() ? JSON.parse(rawText) : {};
+            const msg = errBody?.message ?? errBody?.error ?? errBody?.msg;
+            if (typeof msg === "string") errMsg = msg;
+          } catch {
+            if (rawText) errMsg = rawText.slice(0, 200);
+          }
+          if (errMsg.toLowerCase().includes("webhook") && errMsg.toLowerCase().includes("trigger")) {
+            errMsg =
+              "Webhook trigger is not configured. In n8n: add a Webhook trigger node, activate the workflow, and use the Production URL.";
+          }
+          throw new Error(errMsg);
+        }
 
         let data: unknown;
         try {
