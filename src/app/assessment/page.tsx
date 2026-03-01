@@ -3,10 +3,10 @@
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { Suspense } from "react";
-import ResumeGapMitigation from "@/components/assessment/ResumeGapMitigation";
-import AdvancedArchitectureChallenge from "@/components/assessment/AdvancedArchitectureChallenge";
+import SkillBridgeQuiz from "@/components/assessment/SkillBridgeQuiz";
+import LeadershipPressureQuiz from "@/components/assessment/LeadershipPressureQuiz";
 
-const VALID_TOKEN = "assessment_v1";
+const VALID_TOKEN = "demo_key";
 
 function AssessmentContent() {
   const searchParams = useSearchParams();
@@ -19,24 +19,13 @@ function AssessmentContent() {
       <div className="flex min-h-screen flex-col items-center justify-center bg-zinc-950 p-8">
         <div className="w-full max-w-md rounded-2xl border border-zinc-800/50 bg-zinc-900/40 p-10 text-center shadow-2xl backdrop-blur-xl">
           <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-xl bg-zinc-700/50 mx-auto">
-            <svg
-              className="h-7 w-7 text-zinc-400"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={2}
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M12 15v2m-6 4h12a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2zm10-10V7a4 4 0 0 0-8 0v4h8z"
-              />
-            </svg>
+            <span className="text-2xl">🔒</span>
           </div>
-          <h2 className="mb-3 text-xl font-bold text-white">Private Link Only</h2>
+          <h2 className="mb-3 text-xl font-bold text-white">
+            Authorized Access Only
+          </h2>
           <p className="mb-8 text-sm leading-relaxed text-zinc-400">
-            This assessment requires a valid invitation link. Please use the link
-            sent to you by your recruiter.
+            Please use the link provided in your X-Ray Report.
           </p>
           <button
             onClick={() => router.push("/")}
@@ -50,11 +39,11 @@ function AssessmentContent() {
   }
 
   if (type === "gap") {
-    return <ResumeGapMitigation />;
+    return <SkillBridgeQuiz />;
   }
 
-  if (type === "tech") {
-    return <AdvancedArchitectureChallenge />;
+  if (type === "tech" || type === "behavioral") {
+    return <LeadershipPressureQuiz />;
   }
 
   return (
@@ -62,7 +51,7 @@ function AssessmentContent() {
       <div className="w-full max-w-md rounded-2xl border border-zinc-800/50 bg-zinc-900/40 p-10 text-center shadow-2xl backdrop-blur-xl">
         <h2 className="mb-3 text-xl font-bold text-white">Invalid Assessment Type</h2>
         <p className="mb-8 text-sm leading-relaxed text-zinc-400">
-          Please use a valid assessment link with type=gap or type=tech.
+          Please use a valid assessment link with type=gap, type=tech, or type=behavioral.
         </p>
         <button
           onClick={() => router.push("/")}

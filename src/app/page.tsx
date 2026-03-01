@@ -57,9 +57,16 @@ export default function Home() {
                 The AI has finished evaluating your profile. Your X-Ray
                 dashboard is ready below.
               </p>
-              <pre className="max-h-64 overflow-y-auto rounded-xl border border-zinc-800 bg-zinc-950 p-4 text-left text-xs leading-relaxed text-zinc-300">
-                {JSON.stringify(analysisResult, null, 2)}
-              </pre>
+              {(() => {
+                const str = JSON.stringify(analysisResult, null, 2);
+                const isEmpty = str === "{}" || str === "null" || str === "[]" || str.length < 10;
+                if (isEmpty) return null;
+                return (
+                  <pre className="max-h-64 overflow-y-auto rounded-xl border border-zinc-800 bg-zinc-950 p-4 text-left text-xs leading-relaxed text-zinc-300">
+                    {str}
+                  </pre>
+                );
+              })()}
               <button
                 onClick={() => setAnalysisResult(null)}
                 className="mt-6 rounded-xl border border-zinc-700/50 bg-zinc-800/50 px-5 py-2.5 text-sm font-medium text-zinc-300 transition-colors hover:bg-zinc-700/50 hover:text-white"
