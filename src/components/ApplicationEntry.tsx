@@ -586,12 +586,12 @@ export default function ApplicationEntry({ onAnalysisComplete }: ApplicationEntr
         </div>
       </motion.header>
 
-      {/* ── Mobile: stacked scrollable | Desktop: side-by-side grid ── */}
-      <div className="mx-auto flex flex-col overflow-y-auto lg:grid lg:h-[calc(100vh-56px)] lg:max-w-screen-2xl lg:grid-cols-2 lg:overflow-hidden lg:divide-x lg:divide-zinc-800/50">
-        {/* Left — Job Description (scrollable on both) */}
+      {/* ── Mobile: stacked, page scrolls | Desktop: side-by-side grid, fixed height ── */}
+      <div className="mx-auto flex flex-col lg:grid lg:h-[calc(100vh-56px)] lg:max-w-screen-2xl lg:grid-cols-2 lg:overflow-hidden lg:divide-x lg:divide-zinc-800/50">
+        {/* Left — Job Description */}
         <section
           aria-label="Job Description"
-          className="min-h-0 shrink-0 lg:overflow-hidden"
+          className="min-h-0 lg:overflow-hidden"
         >
           <JobDescriptionPanel />
         </section>
@@ -599,7 +599,7 @@ export default function ApplicationEntry({ onAnalysisComplete }: ApplicationEntr
         {/* Right — Application Form */}
         <section
           aria-label="Application Form"
-          className="relative min-h-[50vh] shrink-0 lg:min-h-0 lg:overflow-hidden"
+          className="relative min-h-0 lg:overflow-hidden"
         >
           <ApplicationFormPanel onAnalysisComplete={onAnalysisComplete} />
         </section>

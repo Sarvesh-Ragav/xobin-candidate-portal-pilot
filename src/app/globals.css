@@ -24,7 +24,8 @@ html {
 body {
   min-height: 100%;
   overflow-x: hidden;
-  /* overflow-y: auto on mobile for scroll; desktop layouts control their own overflow */
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 body {

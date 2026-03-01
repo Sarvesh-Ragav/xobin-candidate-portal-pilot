@@ -11,10 +11,15 @@ const VALID_TOKEN = "demo_key";
 function AssessmentContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const token = searchParams.get("token");
-  const type = searchParams.get("type");
+  const rawToken = searchParams.get("token");
+  const token = rawToken?.trim() ?? "";
+  const type = searchParams.get("type")?.trim() ?? "";
 
-  if (!token || token !== VALID_TOKEN) {
+  console.log("Current Token:", token, "| Type:", type);
+
+  const isValidToken = token.toLowerCase() === VALID_TOKEN.toLowerCase();
+
+  if (!token || !isValidToken) {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center bg-zinc-950 p-4 sm:p-6 lg:p-8">
         <div className="w-full max-w-md rounded-2xl border border-zinc-800/50 bg-zinc-900/40 p-6 text-center shadow-2xl backdrop-blur-xl sm:p-8 lg:p-10">
@@ -41,7 +46,6 @@ function AssessmentContent() {
   if (type === "gap") {
     return <SkillBridgeQuiz />;
   }
-
   if (type === "tech" || type === "behavioral") {
     return <LeadershipPressureQuiz />;
   }
