@@ -118,17 +118,8 @@ Sophisticated HTML emails via n8n + Gmail deliver:
 
 All within ~20 seconds of submission. These emails are human-centric touchpoints—designed to keep candidates engaged and informed at every step, not left wondering what happened to their application.
 
-*Add your Elite Email and Growth Roadmap Email screenshots here:*
+<img width="2940" height="1912" alt="image" src="https://github.com/user-attachments/assets/f5583162-b632-455b-b704-9b8901e8b451" />
 
-<!-- ![Elite Email](docs/screenshots/elite-email.png) -->
-<!-- ![Growth Roadmap Email](docs/screenshots/growth-roadmap-email.png) -->
-
-```
-<img width="2940" height="1912" alt="image" src="https://github.com/user-attachments/assets/d4b974ee-a5af-4761-8762-05d0dccdfd06" />
-<img width="2940" height="1912" alt="image" src="https://github.com/user-attachments/assets/885b6b25-a89b-4bc5-ac78-5bbc19217f74" />
-
-
-   Caption: Real-time career intelligence—instant value delivered to the candidate's inbox.
 ```
 
 ### 4. Relative Market Benchmarking
