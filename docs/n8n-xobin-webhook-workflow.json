@@ -1,0 +1,50 @@
+{
+  "name": "X-Ray Candidate Portal - Application Webhook",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "xobin-application",
+        "responseMode": "lastNode",
+        "responseData": "firstEntryJson",
+        "options": {
+          "rawBody": true
+        }
+      },
+      "id": "a1b2c3d4-webhook",
+      "name": "Application Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [240, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "const input = $input.first().json;\nconst body = input.body || input;\nreturn [{\n  json: {\n    received: true,\n    email: body.email || '',\n    message: 'Application received. AI analysis will be sent to your inbox.'\n  }\n}];"
+      },
+      "id": "b2c3d4e5-code",
+      "name": "Format Response",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [460, 300]
+    }
+  ],
+  "connections": {
+    "Application Webhook": {
+      "main": [
+        [
+          {
+            "node": "Format Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "versionId": "1",
+  "meta": {
+    "templateCredsSetupCompleted": false
+  }
+}

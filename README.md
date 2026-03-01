@@ -196,6 +196,8 @@ Open [http://localhost:3000](http://localhost:3000) to access the portal.
 
 Copy `.env.example` to `.env.local` and add your values.
 
+**Webhook not configured?** See [docs/WEBHOOK_SETUP.md](docs/WEBHOOK_SETUP.md) for step-by-step setup. Import the included workflow (`docs/n8n-xobin-webhook-workflow.json`) into n8n, activate it, and copy the Production URL to `.env.local`.
+
 ---
 
 ## Deploy on Vercel
@@ -209,6 +211,10 @@ Copy `.env.example` to `.env.local` and add your values.
 ## Project Structure
 
 ```
+docs/
+├── n8n-xobin-webhook-workflow.json   # Import into n8n for webhook trigger
+├── WEBHOOK_SETUP.md                  # Webhook configuration guide
+└── screenshots/                      # Add n8n, email, assessment screenshots
 src/
 ├── app/
 │   ├── page.tsx              # Home: Apply with AI X-Ray
