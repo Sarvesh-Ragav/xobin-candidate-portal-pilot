@@ -16,11 +16,15 @@
   box-sizing: border-box;
 }
 
-html,
-body {
+html {
   height: 100%;
-  overflow: hidden;
-  /* prevent outer scroll */
+  overflow-x: hidden;
+}
+
+body {
+  min-height: 100%;
+  overflow-x: hidden;
+  /* overflow-y: auto on mobile for scroll; desktop layouts control their own overflow */
 }
 
 body {

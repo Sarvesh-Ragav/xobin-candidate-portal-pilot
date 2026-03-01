@@ -118,7 +118,7 @@ const JobDescriptionPanel = () => {
         className="pointer-events-none absolute inset-x-0 top-0 h-48 bg-gradient-to-b from-violet-950/30 to-transparent z-10"
       />
       {/* Scrollable content – hidden scrollbar */}
-      <div className="relative flex-1 overflow-y-auto scrollbar-hide px-8 py-10 lg:px-12 lg:py-12">
+      <div className="relative flex-1 overflow-y-auto scrollbar-hide px-4 py-8 sm:px-6 sm:py-10 lg:px-12 lg:py-12">
         {/* Header */}
         <div>
           <div className="mb-6 flex items-center gap-2">
@@ -126,7 +126,7 @@ const JobDescriptionPanel = () => {
             <span className="text-xs font-medium text-emerald-400">Now Hiring</span>
           </div>
 
-          <h1 className="mb-2 text-3xl font-bold tracking-tight text-white lg:text-4xl">
+          <h1 className="mb-2 text-2xl font-bold tracking-tight text-white sm:text-3xl lg:text-4xl">
             {jd.role}
           </h1>
           <p className="mb-6 text-base font-medium text-zinc-400">{jd.company}</p>
@@ -297,8 +297,7 @@ const ApplicationFormPanel = ({
   );
 
   return (
-    /* Full-height flex column to keep form card vertically centred */
-    <div className="flex h-full items-center justify-center p-6 lg:p-10">
+    <div className="flex min-h-[50vh] items-center justify-center p-4 sm:p-6 lg:p-10">
       {/* Ambient glow */}
       <div aria-hidden className="pointer-events-none absolute inset-0 flex items-center justify-center">
         <div className="h-96 w-96 rounded-full bg-violet-600/8 blur-3xl" />
@@ -311,7 +310,7 @@ const ApplicationFormPanel = ({
         className="relative w-full max-w-md"
       >
         {/* Glass card */}
-        <div className="rounded-2xl border border-zinc-800/50 bg-zinc-900/40 p-8 shadow-2xl backdrop-blur-xl">
+        <div className="rounded-2xl border border-zinc-800/50 bg-zinc-900/40 p-5 shadow-2xl backdrop-blur-xl sm:p-6 lg:p-8">
           {/* Header */}
           <div className="mb-7">
             <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-violet-500 to-indigo-600 shadow-lg shadow-violet-500/20">
@@ -435,7 +434,7 @@ const ApplicationFormPanel = ({
                 accept=".pdf"
                 onChange={handleFileChange}
                 disabled={isSubmitting || isParsing}
-                className="block w-full text-sm text-zinc-400 file:mr-4 file:rounded-lg file:border-0 file:bg-violet-500/20 file:px-4 file:py-2 file:text-sm file:font-medium file:text-violet-300 hover:file:bg-violet-500/30"
+                className="block w-full max-w-full text-sm text-zinc-400 file:mr-2 file:max-w-[50%] file:truncate file:rounded-lg file:border-0 file:bg-violet-500/20 file:px-3 file:py-2 file:text-sm file:font-medium file:text-violet-300 sm:file:mr-4 sm:file:max-w-none hover:file:bg-violet-500/30"
               />
               {isParsing && (
                 <p className="mt-2 flex items-center gap-2 text-xs text-zinc-500">
@@ -460,9 +459,10 @@ const ApplicationFormPanel = ({
                 </div>
               )}
               {fileName && resumeText && !parseError && (
-                <p className="mt-2 flex items-center gap-2 text-xs text-emerald-400">
-                  <CheckCircle2 className="h-3.5 w-3.5" />
-                  {fileName} – {resumeText.trim().split(/\s+/).filter(Boolean).length} words extracted
+                <p className="mt-2 flex items-center gap-2 overflow-hidden text-xs text-emerald-400">
+                  <CheckCircle2 className="h-3.5 w-3.5 shrink-0" />
+                  <span className="truncate">{fileName}</span>
+                  <span className="shrink-0">– {resumeText.trim().split(/\s+/).filter(Boolean).length} words</span>
                 </p>
               )}
             </div>
@@ -552,8 +552,7 @@ const ApplicationFormPanel = ({
 /* ─── Main Component ─────────────────────────────────────────── */
 export default function ApplicationEntry({ onAnalysisComplete }: ApplicationEntryProps) {
   return (
-    /* h-screen + overflow-hidden = strict no-scroll viewport lock */
-    <div className="relative h-screen w-full overflow-hidden bg-zinc-950 font-sans">
+    <div className="relative min-h-screen w-full overflow-x-hidden bg-zinc-950 font-sans lg:h-screen lg:overflow-hidden">
       {/* Background radial glow */}
       <div
         aria-hidden
@@ -569,39 +568,38 @@ export default function ApplicationEntry({ onAnalysisComplete }: ApplicationEntr
         initial={{ opacity: 0, y: -16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="relative z-20 border-b border-zinc-800/60 bg-zinc-950/80 backdrop-blur-md"
+        className="relative z-20 shrink-0 border-b border-zinc-800/60 bg-zinc-950/80 backdrop-blur-md"
       >
-        <div className="mx-auto flex h-14 max-w-screen-2xl items-center justify-between px-6">
-          <div className="flex items-center gap-2.5">
-            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br from-violet-500 to-indigo-600">
+        <div className="mx-auto flex h-14 max-w-screen-2xl items-center justify-between px-4 sm:px-6">
+          <div className="flex min-w-0 items-center gap-2 sm:gap-2.5">
+            <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-violet-500 to-indigo-600">
               <Zap className="h-3.5 w-3.5 text-white" />
             </div>
-            <span className="text-sm font-semibold tracking-tight text-white">Xobin</span>
+            <span className="truncate text-sm font-semibold tracking-tight text-white">Xobin</span>
             <span className="hidden text-zinc-600 sm:inline">/</span>
-            <span className="hidden text-sm text-zinc-400 sm:inline">Application X-Ray</span>
+            <span className="hidden truncate text-sm text-zinc-400 sm:inline">Application X-Ray</span>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
             <GlowDot />
-            <span className="text-xs text-zinc-500">AI Model Active</span>
+            <span className="hidden text-xs text-zinc-500 sm:inline">AI Model Active</span>
           </div>
         </div>
       </motion.header>
 
-      {/* ── Split grid — fills exactly the remaining viewport height ── */}
-      {/*  h-[calc(100vh-56px)] = viewport minus 56px nav                */}
-      <div className="mx-auto grid h-[calc(100vh-56px)] max-w-screen-2xl lg:grid-cols-2 lg:divide-x lg:divide-zinc-800/50">
-        {/* Left — scrollable JD, scrollbar hidden */}
+      {/* ── Mobile: stacked scrollable | Desktop: side-by-side grid ── */}
+      <div className="mx-auto flex flex-col overflow-y-auto lg:grid lg:h-[calc(100vh-56px)] lg:max-w-screen-2xl lg:grid-cols-2 lg:overflow-hidden lg:divide-x lg:divide-zinc-800/50">
+        {/* Left — Job Description (scrollable on both) */}
         <section
           aria-label="Job Description"
-          className="h-full min-h-0 overflow-hidden"
+          className="min-h-0 shrink-0 lg:overflow-hidden"
         >
           <JobDescriptionPanel />
         </section>
 
-        {/* Right — vertically centred form, no overflow */}
+        {/* Right — Application Form */}
         <section
           aria-label="Application Form"
-          className="relative h-full min-h-0 overflow-hidden"
+          className="relative min-h-[50vh] shrink-0 lg:min-h-0 lg:overflow-hidden"
         >
           <ApplicationFormPanel onAnalysisComplete={onAnalysisComplete} />
         </section>

@@ -95,13 +95,13 @@ export default function LeadershipPressureQuiz() {
         className="pointer-events-none fixed inset-0 bg-gradient-to-br from-violet-950/20 via-transparent to-transparent"
       />
 
-      <div className="relative mx-auto max-w-2xl px-6 py-12">
+      <div className="relative mx-auto max-w-2xl px-4 py-8 sm:px-6 sm:py-10 lg:px-6 lg:py-12">
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          className="rounded-2xl border border-zinc-800/50 bg-zinc-900/40 p-8 shadow-2xl backdrop-blur-xl"
+          className="rounded-2xl border border-zinc-800/50 bg-zinc-900/40 p-5 shadow-2xl backdrop-blur-xl sm:p-6 lg:p-8"
         >
-          <h1 className="mb-2 text-xl font-bold tracking-tight text-white">
+          <h1 className="mb-2 text-lg font-bold tracking-tight text-white sm:text-xl">
             Senior Leadership & Pressure Simulation
           </h1>
           <p className="mb-6 text-sm text-zinc-400">
@@ -134,7 +134,7 @@ export default function LeadershipPressureQuiz() {
                 transition={{ duration: 0.2 }}
                 className="space-y-6"
               >
-                <p className="text-base font-medium leading-relaxed text-zinc-200">
+                <p className="text-sm font-medium leading-relaxed text-zinc-200 sm:text-base">
                   {question.q}
                 </p>
                 <div className="space-y-3">
@@ -143,7 +143,7 @@ export default function LeadershipPressureQuiz() {
                       key={opt}
                       type="button"
                       onClick={() => handleSelect(opt)}
-                      className={`w-full rounded-xl border px-4 py-3 text-left text-sm transition-all ${
+                      className={`w-full min-h-[44px] rounded-xl border px-4 py-3 text-left text-sm transition-all ${
                         answers[question.id] === opt
                           ? "border-violet-500 bg-violet-500/10 text-white"
                           : "border-zinc-700/60 bg-zinc-800/50 text-zinc-300 hover:border-zinc-600"
@@ -154,12 +154,12 @@ export default function LeadershipPressureQuiz() {
                   ))}
                 </div>
 
-                <div className="flex justify-between pt-4">
+                <div className="flex flex-col-reverse gap-3 pt-4 sm:flex-row sm:justify-between">
                   <button
                     type="button"
                     onClick={handlePrev}
                     disabled={current === 0}
-                    className="rounded-xl border border-zinc-700/50 bg-zinc-800/50 px-4 py-2.5 text-sm font-medium text-zinc-300 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-zinc-700/50"
+                    className="min-h-[44px] rounded-xl border border-zinc-700/50 bg-zinc-800/50 px-4 py-2.5 text-sm font-medium text-zinc-300 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-zinc-700/50 sm:order-first"
                   >
                     Previous
                   </button>
@@ -167,7 +167,7 @@ export default function LeadershipPressureQuiz() {
                     <button
                       type="button"
                       onClick={handleNext}
-                      className="rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 px-4 py-2.5 text-sm font-semibold text-white hover:opacity-95"
+                      className="min-h-[44px] rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 px-4 py-2.5 text-sm font-semibold text-white hover:opacity-95"
                     >
                       Next
                     </button>
@@ -176,7 +176,7 @@ export default function LeadershipPressureQuiz() {
                       type="button"
                       onClick={handleSubmit}
                       disabled={!allAnswered}
-                      className="rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 px-5 py-2.5 text-sm font-semibold text-white disabled:opacity-50 disabled:cursor-not-allowed hover:opacity-95"
+                      className="min-h-[44px] rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 px-5 py-2.5 text-sm font-semibold text-white disabled:opacity-50 disabled:cursor-not-allowed hover:opacity-95"
                     >
                       Submit
                     </button>

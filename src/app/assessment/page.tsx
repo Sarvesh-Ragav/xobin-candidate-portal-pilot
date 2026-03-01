@@ -16,8 +16,8 @@ function AssessmentContent() {
 
   if (!token || token !== VALID_TOKEN) {
     return (
-      <div className="flex min-h-screen flex-col items-center justify-center bg-zinc-950 p-8">
-        <div className="w-full max-w-md rounded-2xl border border-zinc-800/50 bg-zinc-900/40 p-10 text-center shadow-2xl backdrop-blur-xl">
+      <div className="flex min-h-screen flex-col items-center justify-center bg-zinc-950 p-4 sm:p-6 lg:p-8">
+        <div className="w-full max-w-md rounded-2xl border border-zinc-800/50 bg-zinc-900/40 p-6 text-center shadow-2xl backdrop-blur-xl sm:p-8 lg:p-10">
           <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-xl bg-zinc-700/50 mx-auto">
             <span className="text-2xl">🔒</span>
           </div>
@@ -47,8 +47,8 @@ function AssessmentContent() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-zinc-950 p-8">
-      <div className="w-full max-w-md rounded-2xl border border-zinc-800/50 bg-zinc-900/40 p-10 text-center shadow-2xl backdrop-blur-xl">
+    <div className="flex min-h-screen flex-col items-center justify-center bg-zinc-950 p-4 sm:p-6 lg:p-8">
+      <div className="w-full max-w-md rounded-2xl border border-zinc-800/50 bg-zinc-900/40 p-6 text-center shadow-2xl backdrop-blur-xl sm:p-8 lg:p-10">
         <h2 className="mb-3 text-xl font-bold text-white">Invalid Assessment Type</h2>
         <p className="mb-8 text-sm leading-relaxed text-zinc-400">
           Please use a valid assessment link with type=gap, type=tech, or type=behavioral.

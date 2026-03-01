@@ -31,10 +31,10 @@ export default function Home() {
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-            className="flex min-h-screen flex-col items-center justify-center bg-zinc-950 p-8 font-sans"
+            className="flex min-h-screen flex-col items-center justify-center bg-zinc-950 p-4 font-sans sm:p-6 lg:p-8"
           >
             {/* Result placeholder — swap with XRayDashboard component */}
-            <div className="w-full max-w-2xl rounded-2xl border border-zinc-800/50 bg-zinc-900/40 p-10 text-center backdrop-blur-xl">
+            <div className="w-full max-w-2xl rounded-2xl border border-zinc-800/50 bg-zinc-900/40 p-5 text-center backdrop-blur-xl sm:p-8 lg:p-10">
               <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-violet-500 to-indigo-600 mx-auto shadow-lg shadow-violet-500/25">
                 <svg
                   className="h-7 w-7 text-white"
