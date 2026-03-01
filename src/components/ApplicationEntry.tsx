@@ -1,17 +1,16 @@
 "use client";
 
-import { useState, useCallback, useRef, useEffect } from "react";
+import { useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  FileText,
-  Upload,
-  X,
   Mail,
   Sparkles,
   Loader2,
   AlertTriangle,
   CheckCircle2,
   Zap,
+  User,
+  GraduationCap,
 } from "lucide-react";
 
 /* ─── Types ──────────────────────────────────────────────────── */
@@ -19,15 +18,9 @@ interface ApplicationEntryProps {
   onAnalysisComplete: (data: unknown) => void;
 }
 
-type UploadState =
-  | { status: "idle" }
-  | { status: "parsing"; fileName: string }
-  | { status: "ready"; fileName: string; text: string; wordCount: number }
-  | { status: "error"; fileName: string; message: string };
 
 /* ─── Constants ──────────────────────────────────────────────── */
-const WEBHOOK_URL =
-  "https://sarveshragav123.app.n8n.cloud/webhook/99a4a459-2aa0-4b0c-9520-ff31fdd80c5b";
+const WEBHOOK_URL = process.env.NEXT_PUBLIC_N8N_WEBHOOK_URL;
 
 const MOCK_JOB_DESCRIPTION = {
   role: "Senior Frontend Engineer",
@@ -60,7 +53,6 @@ const MOCK_JOB_DESCRIPTION = {
 
 /* ─── Server‑side PDF extraction via /api/parse-pdf ───────────────────── */
 async function parsePdfOnServer(file: File): Promise<string> {
-  // Build FormData with the PDF file
   const form = new FormData();
   form.append("file", file);
 
@@ -69,14 +61,21 @@ async function parsePdfOnServer(file: File): Promise<string> {
     body: form,
   });
 
+  const rawText = await response.text();
+
   if (!response.ok) {
-    const err = await response.text();
-    throw new Error(err || `Server returned ${response.status}`);
+    let errMsg = `Server returned ${response.status}`;
+    try {
+      const parsed = JSON.parse(rawText);
+      if (parsed?.error) errMsg = parsed.error;
+    } catch {
+      if (rawText) errMsg = rawText;
+    }
+    throw new Error(errMsg);
   }
 
-  const data = await response.json();
-  // Expected shape: { text: string }
-  return data.text ?? "";
+  const data = JSON.parse(rawText) as { text?: string };
+  return data?.text ?? "";
 }
 
 /* ─── Micro components ───────────────────────────────────────── */
@@ -181,217 +180,82 @@ const JobDescriptionPanel = () => {
   );
 };
 
-/* ─── PDF Drop Zone ──────────────────────────────────────────── */
-interface DropZoneProps {
-  uploadState: UploadState;
-  onFile: (file: File) => void;
-  onRemove: () => void;
-  disabled: boolean;
-}
-
-const DropZone = ({ uploadState, onFile, onRemove, disabled }: DropZoneProps) => {
-  const inputRef = useRef<HTMLInputElement>(null);
-  const [isDragging, setIsDragging] = useState(false);
-
-  const handleDrop = useCallback(
-    (e: React.DragEvent<HTMLDivElement>) => {
-      e.preventDefault();
-      setIsDragging(false);
-      if (disabled) return;
-      const file = e.dataTransfer.files[0];
-      if (file && file.type === "application/pdf") {
-        onFile(file);
-      }
-    },
-    [disabled, onFile]
-  );
-
-  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    if (!disabled) setIsDragging(true);
-  };
-  const handleDragLeave = () => setIsDragging(false);
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) onFile(file);
-    // Reset so the same file can be re-selected after removal
-    e.target.value = "";
-  };
-
-  /* ── Idle / drag state ── */
-  if (uploadState.status === "idle" || isDragging) {
-    return (
-      <div
-        id="pdf-dropzone"
-        onDrop={handleDrop}
-        onDragOver={handleDragOver}
-        onDragLeave={handleDragLeave}
-        onClick={() => !disabled && inputRef.current?.click()}
-        className={[
-          "relative flex cursor-pointer flex-col items-center justify-center gap-3",
-          "rounded-xl border-2 border-dashed px-6 py-10 text-center",
-          "transition-all duration-200",
-          isDragging
-            ? "border-violet-500/80 bg-violet-500/10 scale-[1.01]"
-            : "border-zinc-700/60 bg-zinc-800/30 hover:border-violet-500/50 hover:bg-zinc-800/50",
-          disabled ? "pointer-events-none opacity-50" : "",
-        ].join(" ")}
-      >
-        <input
-          ref={inputRef}
-          type="file"
-          accept="application/pdf"
-          className="hidden"
-          onChange={handleInputChange}
-          disabled={disabled}
-          id="pdf-file-input"
-        />
-
-        {/* Icon */}
-        <div
-          className={[
-            "flex h-12 w-12 items-center justify-center rounded-xl transition-colors duration-200",
-            isDragging
-              ? "bg-violet-500/20 text-violet-400"
-              : "bg-zinc-700/50 text-zinc-400 group-hover:text-violet-400",
-          ].join(" ")}
-        >
-          <Upload className="h-5 w-5" />
-        </div>
-
-        <div>
-          <p className="text-sm font-medium text-zinc-300">
-            {isDragging ? "Drop your PDF here" : "Drag & drop your resume PDF"}
-          </p>
-          <p className="mt-1 text-xs text-zinc-500">
-            or{" "}
-            <span className="text-violet-400 underline underline-offset-2">
-              click to browse
-            </span>{" "}
-            — PDF only
-          </p>
-        </div>
-      </div>
-    );
-  }
-
-  /* ── Parsing state ── */
-  if (uploadState.status === "parsing") {
-    return (
-      <div className="flex flex-col items-center justify-center gap-3 rounded-xl border-2 border-dashed border-violet-500/40 bg-violet-500/5 px-6 py-10">
-        <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-violet-500/10">
-          <Loader2 className="h-5 w-5 animate-spin text-violet-400" />
-        </div>
-        <div className="text-center">
-          <p className="text-sm font-medium text-zinc-300">Reading Document…</p>
-          <p className="mt-1 text-xs text-zinc-500 truncate max-w-[200px]">
-            {uploadState.fileName}
-          </p>
-        </div>
-      </div>
-    );
-  }
-
-  /* ── Error state ── */
-  if (uploadState.status === "error") {
-    return (
-      <div className="flex flex-col items-center justify-center gap-3 rounded-xl border-2 border-dashed border-red-500/40 bg-red-500/5 px-6 py-8">
-        <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-red-500/10">
-          <AlertTriangle className="h-5 w-5 text-red-400" />
-        </div>
-        <div className="text-center">
-          <p className="text-sm font-medium text-red-400">Failed to parse PDF</p>
-          <p className="mt-1 text-xs text-zinc-500">{uploadState.message}</p>
-        </div>
-        <button
-          onClick={onRemove}
-          className="mt-1 rounded-lg border border-zinc-700/50 bg-zinc-800/50 px-4 py-1.5 text-xs font-medium text-zinc-300 transition-colors hover:bg-zinc-700/50"
-        >
-          Try again
-        </button>
-      </div>
-    );
-  }
-
-  /* ── Ready state ── */
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 6 }}
-      animate={{ opacity: 1, y: 0 }}
-      className="flex items-center gap-3 rounded-xl border border-emerald-500/25 bg-emerald-500/5 px-4 py-3.5"
-    >
-      <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg bg-emerald-500/10">
-        <FileText className="h-4 w-4 text-emerald-400" />
-      </div>
-      <div className="min-w-0 flex-1">
-        <p className="truncate text-sm font-medium text-zinc-200">
-          {uploadState.fileName}
-        </p>
-        <p className="flex items-center gap-1.5 text-xs text-zinc-500">
-          <CheckCircle2 className="h-3 w-3 text-emerald-400" />
-          {uploadState.wordCount.toLocaleString()} words extracted
-        </p>
-      </div>
-      <button
-        onClick={onRemove}
-        disabled={disabled}
-        aria-label="Remove file"
-        className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-lg text-zinc-500 transition-colors hover:bg-zinc-700/50 hover:text-zinc-300 disabled:pointer-events-none"
-      >
-        <X className="h-3.5 w-3.5" />
-      </button>
-    </motion.div>
-  );
-};
-
 /* ─── Right Panel: Application Form ─────────────────────────── */
 const ApplicationFormPanel = ({
   onAnalysisComplete,
 }: {
   onAnalysisComplete: (data: unknown) => void;
 }) => {
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [uploadState, setUploadState] = useState<UploadState>({ status: "idle" });
+  const [college, setCollege] = useState("");
+  const [gradYear, setGradYear] = useState("");
+  const [resumeText, setResumeText] = useState("");
+  const [fileName, setFileName] = useState<string | null>(null);
+  const [parseError, setParseError] = useState<string | null>(null);
+  const [isParsing, setIsParsing] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
   const isReady =
-    email.trim().length > 0 && uploadState.status === "ready";
+    name.trim().length > 0 &&
+    email.trim().length > 0 &&
+    college.trim().length > 0 &&
+    gradYear.length > 0 &&
+    resumeText.length > 0;
 
-  /* ── Handle file selection ── */
-  const handleFile = useCallback(async (file: File) => {
-    setUploadState({ status: "parsing", fileName: file.name });
-    setSubmitError(null);
-    try {
-      const text = await parsePdfOnServer(file);
-      if (!text || text.trim().length < 20) {
-        throw new Error("No readable text found. Is this a scanned PDF?");
+  /* ── Handle file selection: POST to /api/parse, save to resumeText ── */
+  const handleFileChange = useCallback(
+    async (e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0];
+      e.target.value = ""; // Reset so same file can be re-selected
+      if (!file) return;
+
+      setIsParsing(true);
+      setParseError(null);
+      setSubmitError(null);
+
+      try {
+        const text = await parsePdfOnServer(file);
+        if (!text || text.trim().length < 20) {
+          throw new Error("No readable text found. Is this a scanned PDF?");
+        }
+        setResumeText(text);
+        setFileName(file.name);
+        setParseError(null);
+      } catch (err) {
+        const msg = err instanceof Error ? err.message : "Unknown error";
+        setParseError(msg);
+        setResumeText("");
+        setFileName(null);
+      } finally {
+        setIsParsing(false);
       }
-      const wordCount = text.trim().split(/\s+/).filter(Boolean).length;
-      setUploadState({ status: "ready", fileName: file.name, text, wordCount });
-    } catch (err) {
-      setUploadState({
-        status: "error",
-        fileName: file.name,
-        message: err instanceof Error ? err.message : "Unknown error",
-      });
-    }
-  }, []);
+    },
+    []
+  );
 
-  const handleRemove = useCallback(() => {
-    setUploadState({ status: "idle" });
+  const handleRemoveResume = useCallback(() => {
+    setResumeText("");
+    setFileName(null);
+    setParseError(null);
     setSubmitError(null);
   }, []);
 
-  /* ── Submit ── */
+  /* ── Submit: same logic – email, jobDescription, resumeText to n8n webhook ── */
   const handleSubmit = useCallback(
     async (e: React.FormEvent) => {
       e.preventDefault();
-      if (!isReady || isSubmitting || uploadState.status !== "ready") return;
+      if (!isReady || isSubmitting) return;
 
       setIsSubmitting(true);
       setSubmitError(null);
+
+      if (!WEBHOOK_URL) {
+        setSubmitError("Webhook URL is not configured. Please contact support.");
+        setIsSubmitting(false);
+        return;
+      }
 
       try {
         const response = await fetch(WEBHOOK_URL, {
@@ -399,8 +263,11 @@ const ApplicationFormPanel = ({
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             email: email.trim(),
+            name: name.trim(),
+            college: college.trim(),
+            gradYear,
+            resumeText,
             jobDescription: MOCK_JOB_DESCRIPTION,
-            resumeText: uploadState.text,
           }),
         });
 
@@ -408,7 +275,16 @@ const ApplicationFormPanel = ({
           throw new Error(`Request failed with status ${response.status}`);
         }
 
-        const data = await response.json();
+        const rawText = await response.text();
+
+        let data: unknown;
+        try {
+          data = rawText.trim() ? JSON.parse(rawText) : {};
+        } catch {
+          throw new Error("Invalid response from server. Please try again.");
+        }
+
+        console.log("[System] Application submitted successfully");
         onAnalysisComplete(data);
       } catch (err) {
         setSubmitError(
@@ -417,7 +293,7 @@ const ApplicationFormPanel = ({
         setIsSubmitting(false);
       }
     },
-    [email, isReady, isSubmitting, uploadState, onAnalysisComplete]
+    [name, email, college, gradYear, resumeText, isReady, isSubmitting, onAnalysisComplete]
   );
 
   return (
@@ -450,52 +326,145 @@ const ApplicationFormPanel = ({
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-5" noValidate>
-            {/* Email */}
-            <div className="group">
-              <label
-                htmlFor="application-email"
-                className="mb-2 block text-xs font-semibold uppercase tracking-wider text-zinc-500 transition-colors group-focus-within:text-violet-400"
-              >
-                Email Address
-              </label>
-              <div className="relative">
-                <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5">
-                  <Mail className="h-4 w-4 text-zinc-500 transition-colors group-focus-within:text-violet-400" />
+            {/* Row 1: Name + Email */}
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <div className="group">
+                <label
+                  htmlFor="application-name"
+                  className="mb-2 block text-xs font-semibold uppercase tracking-wider text-zinc-500 transition-colors group-focus-within:text-violet-400"
+                >
+                  Full Name
+                </label>
+                <div className="relative">
+                  <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5">
+                    <User className="h-4 w-4 text-zinc-500 transition-colors group-focus-within:text-violet-400" />
+                  </div>
+                  <input
+                    id="application-name"
+                    type="text"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    placeholder="Enter your full name"
+                    disabled={isSubmitting}
+                    autoComplete="name"
+                    className="w-full rounded-xl border border-zinc-700/60 bg-zinc-800/50 py-3 pl-10 pr-4 text-sm text-white placeholder-zinc-600 outline-none transition-all duration-200 focus:border-violet-500/70 focus:bg-zinc-800/80 focus:ring-2 focus:ring-violet-500/20 disabled:cursor-not-allowed disabled:opacity-50"
+                  />
                 </div>
-                <input
-                  id="application-email"
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="you@example.com"
-                  disabled={isSubmitting}
-                  autoComplete="email"
-                  className="w-full rounded-xl border border-zinc-700/60 bg-zinc-800/50 py-3 pl-10 pr-4 text-sm text-white placeholder-zinc-600 outline-none transition-all duration-200 focus:border-violet-500/70 focus:bg-zinc-800/80 focus:ring-2 focus:ring-violet-500/20 disabled:cursor-not-allowed disabled:opacity-50"
-                />
+              </div>
+              <div className="group">
+                <label
+                  htmlFor="application-email"
+                  className="mb-2 block text-xs font-semibold uppercase tracking-wider text-zinc-500 transition-colors group-focus-within:text-violet-400"
+                >
+                  Email Address
+                </label>
+                <div className="relative">
+                  <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5">
+                    <Mail className="h-4 w-4 text-zinc-500 transition-colors group-focus-within:text-violet-400" />
+                  </div>
+                  <input
+                    id="application-email"
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="Enter your email"
+                    disabled={isSubmitting}
+                    autoComplete="email"
+                    className="w-full rounded-xl border border-zinc-700/60 bg-zinc-800/50 py-3 pl-10 pr-4 text-sm text-white placeholder-zinc-600 outline-none transition-all duration-200 focus:border-violet-500/70 focus:bg-zinc-800/80 focus:ring-2 focus:ring-violet-500/20 disabled:cursor-not-allowed disabled:opacity-50"
+                  />
+                </div>
               </div>
             </div>
 
-            {/* PDF Upload */}
+            {/* Row 2: College + Grad Year */}
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <div className="group">
+                <label
+                  htmlFor="application-college"
+                  className="mb-2 block text-xs font-semibold uppercase tracking-wider text-zinc-500 transition-colors group-focus-within:text-violet-400"
+                >
+                  College / University
+                </label>
+                <div className="relative">
+                  <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5">
+                    <GraduationCap className="h-4 w-4 text-zinc-500 transition-colors group-focus-within:text-violet-400" />
+                  </div>
+                  <input
+                    id="application-college"
+                    type="text"
+                    value={college}
+                    onChange={(e) => setCollege(e.target.value)}
+                    placeholder="Enter college or university name"
+                    disabled={isSubmitting}
+                    autoComplete="organization"
+                    className="w-full rounded-xl border border-zinc-700/60 bg-zinc-800/50 py-3 pl-10 pr-4 text-sm text-white placeholder-zinc-600 outline-none transition-all duration-200 focus:border-violet-500/70 focus:bg-zinc-800/80 focus:ring-2 focus:ring-violet-500/20 disabled:cursor-not-allowed disabled:opacity-50"
+                  />
+                </div>
+              </div>
+              <div className="group">
+                <label
+                  htmlFor="application-grad-year"
+                  className="mb-2 block text-xs font-semibold uppercase tracking-wider text-zinc-500 transition-colors group-focus-within:text-violet-400"
+                >
+                  Graduation Year
+                </label>
+                <select
+                  id="application-grad-year"
+                  value={gradYear}
+                  onChange={(e) => setGradYear(e.target.value)}
+                  disabled={isSubmitting}
+                  className="w-full appearance-none rounded-xl border border-zinc-700/60 bg-zinc-800/50 py-3 pl-4 pr-10 text-sm text-white outline-none transition-all duration-200 focus:border-violet-500/70 focus:bg-zinc-800/80 focus:ring-2 focus:ring-violet-500/20 disabled:cursor-not-allowed disabled:opacity-50 [&>option]:bg-zinc-800 [&>option]:text-white"
+                >
+                  <option value="">Select graduation year</option>
+                  {[2024, 2025, 2026, 2027, 2028].map((year) => (
+                    <option key={year} value={String(year)}>
+                      {year}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            {/* PDF Upload – simple file input */}
             <div>
               <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-zinc-500">
                 Resume PDF
               </label>
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={uploadState.status}
-                  initial={{ opacity: 0, y: 4 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -4 }}
-                  transition={{ duration: 0.18 }}
-                >
-                  <DropZone
-                    uploadState={uploadState}
-                    onFile={handleFile}
-                    onRemove={handleRemove}
-                    disabled={isSubmitting}
-                  />
-                </motion.div>
-              </AnimatePresence>
+              <input
+                type="file"
+                accept=".pdf"
+                onChange={handleFileChange}
+                disabled={isSubmitting || isParsing}
+                className="block w-full text-sm text-zinc-400 file:mr-4 file:rounded-lg file:border-0 file:bg-violet-500/20 file:px-4 file:py-2 file:text-sm file:font-medium file:text-violet-300 hover:file:bg-violet-500/30"
+              />
+              {isParsing && (
+                <p className="mt-2 flex items-center gap-2 text-xs text-zinc-500">
+                  <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                  Reading document…
+                </p>
+              )}
+              {parseError && (
+                <div className="mt-2 flex flex-col gap-1 rounded-lg border border-red-500/30 bg-red-500/10 px-3 py-2">
+                  <p className="flex items-center gap-2 text-xs font-medium text-red-400">
+                    <AlertTriangle className="h-3.5 w-3.5 flex-shrink-0" />
+                    Failed to parse PDF
+                  </p>
+                  <p className="text-xs text-zinc-500">{parseError}</p>
+                  <button
+                    type="button"
+                    onClick={handleRemoveResume}
+                    className="mt-1 self-start rounded border border-zinc-700/50 bg-zinc-800/50 px-3 py-1 text-xs text-zinc-300 hover:bg-zinc-700/50"
+                  >
+                    Try again
+                  </button>
+                </div>
+              )}
+              {fileName && resumeText && !parseError && (
+                <p className="mt-2 flex items-center gap-2 text-xs text-emerald-400">
+                  <CheckCircle2 className="h-3.5 w-3.5" />
+                  {fileName} – {resumeText.trim().split(/\s+/).filter(Boolean).length} words extracted
+                </p>
+              )}
             </div>
 
             {/* Submit error */}
@@ -553,7 +522,7 @@ const ApplicationFormPanel = ({
                     className="flex items-center justify-center gap-2.5"
                   >
                     <Loader2 className="h-4 w-4 animate-spin" />
-                    AI Evaluating Profile…
+                    Analyzing…
                   </motion.span>
                 ) : (
                   <motion.span
@@ -572,7 +541,7 @@ const ApplicationFormPanel = ({
           </form>
 
           <p className="mt-6 text-center text-[11px] leading-5 text-zinc-600">
-            Your resume is processed entirely in your browser. We never store your file.
+            Your resume is processed securely. We never store your file.
           </p>
         </div>
       </motion.div>

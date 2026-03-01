@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { extractText, getDocumentProxy } from "unpdf";
 
 /**
- * PDF Parsing API Route (alias: parse-pdf)
+ * PDF Parsing API Route
  * Accepts FormData with a "file" field containing the PDF.
  * Uses unpdf (Mozilla PDF.js) for robust text extraction.
  * Returns { text: string }.

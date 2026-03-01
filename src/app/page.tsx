@@ -9,7 +9,7 @@ export default function Home() {
 
   const handleAnalysisComplete = (data: unknown) => {
     setAnalysisResult(data);
-    console.log("[Xobin AI] Analysis result received:", data);
+    console.log("[System] Analysis complete");
   };
 
   return (
