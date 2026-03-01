@@ -111,14 +111,14 @@ const JobDescriptionPanel = () => {
   const jd = MOCK_JOB_DESCRIPTION;
 
   return (
-    <div className="relative flex h-full flex-col">
+    <div className="relative flex min-h-0 flex-1 flex-col lg:h-full">
       {/* Ambient gradient – fixed */}
       <div
         aria-hidden
         className="pointer-events-none absolute inset-x-0 top-0 h-48 bg-gradient-to-b from-violet-950/30 to-transparent z-10"
       />
-      {/* Scrollable content – hidden scrollbar */}
-      <div className="relative flex-1 overflow-y-auto scrollbar-hide px-4 py-8 sm:px-6 sm:py-10 lg:px-12 lg:py-12">
+      {/* Content: flows on mobile, scrolls on desktop */}
+      <div className="relative flex-1 overflow-y-auto scrollbar-hide px-4 py-8 sm:px-6 sm:py-10 lg:overflow-y-auto lg:px-12 lg:py-12">
         {/* Header */}
         <div>
           <div className="mb-6 flex items-center gap-2">
@@ -297,7 +297,7 @@ const ApplicationFormPanel = ({
   );
 
   return (
-    <div className="flex min-h-[50vh] items-center justify-center p-4 sm:p-6 lg:p-10">
+    <div className="flex min-h-0 flex-1 items-start justify-center py-8 pb-12 pt-6 sm:items-center sm:py-10 sm:pb-16 lg:min-h-0 lg:items-center lg:py-10">
       {/* Ambient glow */}
       <div aria-hidden className="pointer-events-none absolute inset-0 flex items-center justify-center">
         <div className="h-96 w-96 rounded-full bg-violet-600/8 blur-3xl" />
@@ -310,7 +310,7 @@ const ApplicationFormPanel = ({
         className="relative w-full max-w-md"
       >
         {/* Glass card */}
-        <div className="rounded-2xl border border-zinc-800/50 bg-zinc-900/40 p-5 shadow-2xl backdrop-blur-xl sm:p-6 lg:p-8">
+        <div className="w-full rounded-2xl border border-zinc-800/50 bg-zinc-900/40 p-5 shadow-2xl backdrop-blur-xl sm:p-6 lg:p-8">
           {/* Header */}
           <div className="mb-7">
             <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-violet-500 to-indigo-600 shadow-lg shadow-violet-500/20">
@@ -491,7 +491,7 @@ const ApplicationFormPanel = ({
               disabled={!isReady || isSubmitting}
               whileHover={isReady && !isSubmitting ? { scale: 1.015 } : {}}
               whileTap={isReady && !isSubmitting ? { scale: 0.985 } : {}}
-              className="relative w-full overflow-hidden rounded-xl py-3.5 text-sm font-semibold text-white shadow-lg transition-all duration-300 disabled:cursor-not-allowed disabled:opacity-40"
+              className="relative z-10 w-full overflow-hidden rounded-xl py-3.5 text-sm font-semibold text-white shadow-lg transition-all duration-300 disabled:cursor-not-allowed disabled:opacity-40 [touch-action:manipulation]"
               style={{
                 background: isSubmitting
                   ? "linear-gradient(135deg, #4c1d95, #3730a3)"
@@ -586,12 +586,12 @@ export default function ApplicationEntry({ onAnalysisComplete }: ApplicationEntr
         </div>
       </motion.header>
 
-      {/* ── Mobile: stacked, page scrolls | Desktop: side-by-side grid, fixed height ── */}
-      <div className="mx-auto flex flex-col lg:grid lg:h-[calc(100vh-56px)] lg:max-w-screen-2xl lg:grid-cols-2 lg:overflow-hidden lg:divide-x lg:divide-zinc-800/50">
+      {/* ── Mobile: stacked, document scrolls | Desktop: side-by-side grid ── */}
+      <div className="mx-auto flex w-full flex-col lg:grid lg:h-[calc(100vh-56px)] lg:max-w-screen-2xl lg:grid-cols-2 lg:overflow-hidden lg:divide-x lg:divide-zinc-800/50">
         {/* Left — Job Description */}
         <section
           aria-label="Job Description"
-          className="min-h-0 lg:overflow-hidden"
+          className="min-h-0 flex-1 lg:overflow-hidden"
         >
           <JobDescriptionPanel />
         </section>
@@ -599,7 +599,7 @@ export default function ApplicationEntry({ onAnalysisComplete }: ApplicationEntr
         {/* Right — Application Form */}
         <section
           aria-label="Application Form"
-          className="relative min-h-0 lg:overflow-hidden"
+          className="relative flex min-h-0 flex-1 flex-col lg:overflow-hidden"
         >
           <ApplicationFormPanel onAnalysisComplete={onAnalysisComplete} />
         </section>
