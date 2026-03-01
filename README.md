@@ -77,18 +77,7 @@ flowchart TB
 
 The Adaptive Branching logic—Elite vs. Bridge track, AI X-Ray scoring, and feedback routing—is **not hard-coded in the frontend**. Instead, n8n manages the entire flow as a visual workflow: resume ingestion, Gemini analysis, conditional branching, and Gmail dispatch. This keeps the candidate experience human-centric while the orchestration stays flexible and maintainable.
 
-*Add your n8n Workflow Canvas screenshot here:*
-
-<!-- ![n8n Workflow Canvas](docs/screenshots/n8n-workflow-canvas.png) -->
-
-```
-<img width="2940" height="1912" alt="image" src="https://github.com/user-attachments/assets/cf5ef456-139a-484a-875d-a7508e88cae9" />
-
-   Path: docs/screenshots/n8n-workflow-canvas.png
-   Caption: The orchestration engine—logic branches, webhooks, and AI integration without frontend complexity.
-```
-
----
+![n8n Workflow](./image.png)
 
 ## Feature Deep-Dive
 
