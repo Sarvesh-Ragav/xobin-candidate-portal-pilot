@@ -3,7 +3,7 @@
 | Link | URL |
 |------|-----|
 | **Live Deployment** | [https://xobin-candidate-portal-pilot.vercel.app](https://xobin-candidate-portal-pilot.vercel.app) |
-| **Assessment Demo** | [https://xobin-candidate-portal-pilot.vercel.app/assessment](https://xobin-candidate-portal-pilot.vercel.app/assessment) |
+| **GitHub** | [Repository](https://github.com/your-org/xobin-candidate-portal-pilot) |
 
 ---
 
@@ -71,6 +71,24 @@ flowchart TB
 
 ---
 
+## Technical Architecture
+
+### The Orchestration Engine: Visualizing the logic branches and AI integration
+
+The Adaptive Branching logic—Elite vs. Bridge track, AI X-Ray scoring, and feedback routing—is **not hard-coded in the frontend**. Instead, n8n manages the entire flow as a visual workflow: resume ingestion, Gemini analysis, conditional branching, and Gmail dispatch. This keeps the candidate experience human-centric while the orchestration stays flexible and maintainable.
+
+*Add your n8n Workflow Canvas screenshot here:*
+
+<!-- ![n8n Workflow Canvas](docs/screenshots/n8n-workflow-canvas.png) -->
+
+```
+📸 SCREENSHOT PLACEHOLDER: n8n Workflow Canvas
+   Path: docs/screenshots/n8n-workflow-canvas.png
+   Caption: The orchestration engine—logic branches, webhooks, and AI integration without frontend complexity.
+```
+
+---
+
 ## Feature Deep-Dive
 
 ### 1. Live System Log
@@ -86,9 +104,23 @@ Token-gated `/assessment` routes serve the right experience:
 | **Elite** | `/assessment?type=tech` or `?type=behavioral` | Senior candidates — Leadership & Pressure Simulation |
 | **Bridge** | `/assessment?type=gap` | Growth candidates — Technical Gap Mitigation Quiz |
 
-The system routes candidates based on AI X-Ray scores, ensuring everyone gets an assessment that matches their profile.
+The system routes candidates based on AI X-Ray scores, ensuring everyone gets an assessment that matches their profile. These are real-time touchpoints—candidates see their path immediately and stay engaged instead of waiting in the dark.
+
+**The Secure Assessment: Token-Gated Assessment UI**
+
+*Add your Token-Gated Assessment UI screenshot here:*
+
+<!-- ![Token-Gated Assessment](docs/screenshots/token-gated-assessment.png) -->
+
+```
+📸 SCREENSHOT PLACEHOLDER: Token-Gated Assessment UI
+   Path: docs/screenshots/token-gated-assessment.png
+   Caption: Candidates receive the right assessment for their track—Elite or Bridge—keeping them informed and in control.
+```
 
 ### 3. Automated Feedback Loop
+
+**Automated Career Intelligence: Delivering instant value to the candidate's inbox**
 
 Sophisticated HTML emails via n8n + Gmail deliver:
 
@@ -96,7 +128,22 @@ Sophisticated HTML emails via n8n + Gmail deliver:
 - **Percentile standings** — Where they rank in the applicant pool
 - **Personalized recommendations** — What to improve
 
-All within ~20 seconds of submission.
+All within ~20 seconds of submission. These emails are human-centric touchpoints—designed to keep candidates engaged and informed at every step, not left wondering what happened to their application.
+
+*Add your Elite Email and Growth Roadmap Email screenshots here:*
+
+<!-- ![Elite Email](docs/screenshots/elite-email.png) -->
+<!-- ![Growth Roadmap Email](docs/screenshots/growth-roadmap-email.png) -->
+
+```
+📸 SCREENSHOT PLACEHOLDER: Elite Email (Leadership & Pressure feedback)
+   Path: docs/screenshots/elite-email.png
+
+📸 SCREENSHOT PLACEHOLDER: Growth Roadmap Email (Technical Gap feedback)
+   Path: docs/screenshots/growth-roadmap-email.png
+
+   Caption: Real-time career intelligence—instant value delivered to the candidate's inbox.
+```
 
 ### 4. Relative Market Benchmarking
 
@@ -176,6 +223,15 @@ src/
 │       ├── SkillBridgeQuiz.tsx       # Bridge Track
 │       └── LeadershipPressureQuiz.tsx # Elite Track
 ```
+
+---
+
+## Quick Links
+
+| Link | URL |
+|------|-----|
+| **Live Deployment** | [https://xobin-candidate-portal-pilot.vercel.app](https://xobin-candidate-portal-pilot.vercel.app) |
+| **GitHub** | [Repository](https://github.com/your-org/xobin-candidate-portal-pilot) |
 
 ---
 
