@@ -20,7 +20,7 @@ interface ApplicationEntryProps {
 
 
 /* ─── Constants ──────────────────────────────────────────────── */
-const WEBHOOK_URL = process.env.NEXT_PUBLIC_N8N_WEBHOOK_URL;
+const SUBMIT_URL = "/api/submit";
 
 const MOCK_JOB_DESCRIPTION = {
   role: "Senior Frontend Engineer",
@@ -250,14 +250,8 @@ const ApplicationFormPanel = ({
       setIsSubmitting(true);
       setSubmitError(null);
 
-      if (!WEBHOOK_URL) {
-        setSubmitError("Resource issue. Please try again later.");
-        setIsSubmitting(false);
-        return;
-      }
-
       try {
-        const response = await fetch(WEBHOOK_URL, {
+        const response = await fetch(SUBMIT_URL, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -283,7 +277,6 @@ const ApplicationFormPanel = ({
           throw new Error("RESOURCE_ISSUE");
         }
 
-        console.log("[System] Application submitted successfully");
         onAnalysisComplete(data);
       } catch {
         setSubmitError("Resource issue. Please try again later.");

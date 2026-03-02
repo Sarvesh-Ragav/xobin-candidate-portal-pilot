@@ -1,6 +1,6 @@
 # n8n Webhook Setup for X-Ray Candidate Portal
 
-The application form submits candidate data to an n8n webhook. You need a workflow with a **Webhook trigger** configured and **active** for submissions to work.
+The application form submits candidate data to an n8n webhook via a **server-side proxy** (`/api/submit`). This avoids CORS issues that occur when the browser calls n8n directly. You need a workflow with a **Webhook trigger** configured and **active** for submissions to work.
 
 ## Quick Setup (Import Workflow)
 
